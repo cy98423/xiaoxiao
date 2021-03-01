@@ -2,7 +2,8 @@
   <div>
     <label class="notes">
       <span class="name">备注</span>
-      <input type="text" placeholder="在这里输入备注">
+      <input type="text" v-model="value"
+             placeholder="在这里输入备注">
     </label>
   </div>
 </template>
@@ -12,8 +13,8 @@
   import {Component} from 'vue-property-decorator';
 
   @Component
-  export default class Notes extends Vue{
-
+  export default class Notes extends Vue {
+    value = '';
   }
 </script>
 
