@@ -2,7 +2,7 @@
 
     <layout class-prefix="layout">
       <NumberPad></NumberPad>
-      <Types></Types>
+      <Types x="hi"></Types>
       <Notes></Notes>
       <Tags></Tags>
     </layout>
