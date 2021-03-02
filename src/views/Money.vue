@@ -3,7 +3,10 @@
     <layout class-prefix="layout">
       <NumberPad :value.sync="record.amount" @submit="saveRecord"></NumberPad>
       <Types :value.sync="record.type"></Types>
-      <Notes @update:value="onUpdateNotes"></Notes>
+      <Notes field-name="备注"
+             placeholder="在这里输入备注"
+             @update:value="onUpdateNotes"
+      ></Notes>
       <Tags :data-source.sync="tags" @update:value="onUpdateTags"></Tags>
     </layout>
 
@@ -21,14 +24,13 @@ import tagListModel from '@/models/tagListModel';
 
 
 const recordList = recordListModel.fetch();
-const tagList = tagListModel.fetch()
-
+tagListModel.fetch()
 
 @Component({
   components: {Tags, Notes, Types, NumberPad},
 })
 export default class Money extends Vue {
-  tags = tagList;
+  tags = tagListModel.data;
   recordList: RecordItem[] = recordList;
   record: RecordItem = {
     tags: [],
@@ -38,7 +40,7 @@ export default class Money extends Vue {
   };
 
   onUpdateTags(value: string[]) {
-    this.record.tags = value;
+    this.record.tags = [JSON.stringify({id:value,name:value})];
   }
 
   onUpdateNotes(value: string) {
@@ -55,6 +57,7 @@ export default class Money extends Vue {
   onRecordListChange() {
     recordListModel.save(this.recordList);
   }
+
 }
 
 </script>
