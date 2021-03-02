@@ -28,7 +28,6 @@ export default {
     @extend %outerShadow;
     display: flex;
     flex-direction: row;
-    font-size: 12px;
     padding-top: 5px;
     > .item{
       width: 33.333333%;
@@ -37,7 +36,7 @@ export default {
       align-items: center;
       flex-direction: column;
       fill: none;
-      .icon{
+     .icon{
         width: 32px;
         height: 32px;
       }

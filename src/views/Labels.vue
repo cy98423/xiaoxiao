@@ -1,9 +1,12 @@
 <template>
-
-    <layout>
-      <p>Labels.vue</p>
-    </layout>
-
+<layout>
+  <ol>
+    <li>衣 <Icon name="#right"/></li>
+    <li>食</li>
+    <li>住</li>
+    <li>行</li>
+  </ol>
+</layout>
 </template>
 
 <script lang="ts">
