@@ -25,13 +25,11 @@ import store from '@/store/index.ts';
 
 @Component({
   components: {Tags, FormItem , Types, NumberPad},
-  computed:{
-    recordList(){
-      return store.state.recordList
-    }
-  }
 })
 export default class Money extends Vue {
+  get recordList(){
+    return store.state.recordList
+  }
   record: RecordItem = {
     tags: [],
     notes: '',
