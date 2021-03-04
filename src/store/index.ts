@@ -5,11 +5,18 @@ import createId from "@/lib/createId";
 
 Vue.use(Vuex);
 
+type RootState = {
+  recordList: RecordItem[];
+  tagList: Tag[];
+  currentTag?: Tag;
+};
+
 const store = new Vuex.Store({
   state: {
-    recordList: [] as RecordItem[],
-    tagList: [] as Tag[],
-  },
+    recordList: [],
+    tagList: [],
+    currentTag: undefined,
+  } as RootState,
   mutations: {
     fetchRecords(state) {
       state.recordList = JSON.parse(
@@ -38,15 +45,19 @@ const store = new Vuex.Store({
       const names = state.tagList.map((item) => item.name);
       if (names.indexOf(name) >= 0) {
         window.alert("标签名重复了");
-        return "duplicated";
       }
       state.tagList.push({ id: id, name: name });
       store.commit("saveTags");
       window.alert("添加成功");
-      return "success";
     },
     saveTags(state) {
       window.localStorage.setItem("tagList", JSON.stringify(state.tagList));
+    },
+    findTag(state, id: string) {
+      return state.tagList.filter((t) => t.id === id)[0];
+    },
+    setCurrentTag(state, id: string) {
+      state.currentTag = state.tagList.filter((t) => t.id === id)[0];
     },
   },
   actions: {},
