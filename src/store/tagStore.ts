@@ -8,6 +8,7 @@ const tagStore = {
     this.tagList = JSON.parse(
       window.localStorage.getItem(localStorageKeyName) || "[]"
     );
+    return this.tagList;
   },
   findTag(id: string) {
     return this.tagList.filter((t) => t.id === id)[0];
