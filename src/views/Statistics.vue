@@ -8,7 +8,7 @@
 
       <ol>
         <li v-for="(group,index) in groupedList" :key="index">
-          <h3 class="title">{{ beautify(group.title) }}</h3>
+          <h3 class="title">{{ beautify(group.title) }}<span>￥{{ group.total }}</span></h3>
           <ol>
             <li v-for="item in group.items" :key="item.id"
                 class="record"
@@ -27,7 +27,6 @@
 import Vue from 'vue';
 import {Component} from 'vue-property-decorator';
 import Tabs from '@/components/Tabs.vue';
-import intervalList from '@/constants/intervalList';
 import recordTypeList from '@/constants/recordTypeList';
 import dayjs from 'dayjs';
 import clone from '@/lib/clone';
@@ -65,21 +64,26 @@ export default class Statistics extends Vue {
 
   get groupedList() {
     const {recordList} = this;//recordList = this.recordList
-    if (recordList.length === 0){return []}
+    if (recordList.length === 0) {
+      return [];
+    }
 
-    const newList = clone(recordList).sort((a, b) => dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf());
-    const result = [{title: dayjs(newList[0].createdAt).format('YYYY-MM-D'),items: [newList[0]]}]
-    for (let i =1 ;i<newList.length;i++){
+    const newList = clone(recordList).filter(r => r.type === this.type).sort((a, b) => dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf());
+    type Result = { title: string; total?: number; items: RecordItem[] }[]
+    const result: Result = [{title: dayjs(newList[0].createdAt).format('YYYY-MM-D'), items: [newList[0]]}];
+    for (let i = 1; i < newList.length; i++) {
       const current = newList[i];
-      const last = result[result.length-1];
-      if(dayjs(last.title).isSame(dayjs(current.createdAt),'day')){
-        last.items.push(current)
-      }else{
-        result.push({title: dayjs(current.createdAt).format('YYYY-MM-D'),items:[current]})
+      const last = result[result.length - 1];
+      if (dayjs(last.title).isSame(dayjs(current.createdAt), 'day')) {
+        last.items.push(current);
+      } else {
+        result.push({title: dayjs(current.createdAt).format('YYYY-MM-D'), items: [current]});
       }
     }
-    console.log(result);
-    return result
+    result.map(group => {
+      group.total = group.items.reduce((sum, item) => sum + item.amount, 0);
+    });
+    return result;
   }
 
   beforeCreate() {
