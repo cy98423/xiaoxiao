@@ -35,6 +35,7 @@ export default class Tags extends mixins(TagHelper) {
   }
   toggle(tag: string) {
     const index = this.selectedTags.indexOf(tag);
+    console.log(tag)
     if (index >= 0) {
       this.selectedTags.splice(index, 1);
     } else {

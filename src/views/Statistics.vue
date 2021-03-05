@@ -5,8 +5,11 @@
         :data-source="recordTypeList"
         :value.sync="type"
     />
-
-      <ol>
+    <div class="info">
+      <span v-if="type === '-'">支出统计</span>
+      <span v-else>收入统计</span>
+    </div>
+      <ol v-if="groupedList.length>0">
         <li v-for="(group,index) in groupedList" :key="index">
           <h3 class="title">{{ beautify(group.title) }}<span>￥{{ group.total }}</span></h3>
           <ol>
@@ -20,6 +23,9 @@
           </ol>
         </li>
       </ol>
+      <div v-else class="noResult">
+        目前没有相关记录
+      </div>
   </layout>
 </template>
 <script lang="ts">
@@ -55,7 +61,7 @@ export default class Statistics extends Vue {
 
 
   tagString(tags: Tag[]) {
-    return tags.length === 0 ? '无' : tags.join(',');
+    return tags.length === 0 ? '无' : tags.join('，');
   }
 
   get recordList() {
@@ -69,6 +75,7 @@ export default class Statistics extends Vue {
     }
 
     const newList = clone(recordList).filter(r => r.type === this.type).sort((a, b) => dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf());
+    if(newList.length === 0 ){return[]}
     type Result = { title: string; total?: number; items: RecordItem[] }[]
     const result: Result = [{title: dayjs(newList[0].createdAt).format('YYYY-MM-D'), items: [newList[0]]}];
     for (let i = 1; i < newList.length; i++) {
@@ -97,6 +104,14 @@ export default class Statistics extends Vue {
 
 
 <style lang="scss" scoped>
+.noResult{
+  padding: 16px;
+  text-align: center;
+}
+.info{
+  padding: 8px 0;
+  text-align: center;
+}
 %item {
   padding: 8px 16px;
   line-height: 24px;
