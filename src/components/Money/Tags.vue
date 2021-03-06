@@ -1,14 +1,17 @@
 <template>
-  <div class="tags">
+  <div class="tags" >
     <div class="new">
-      <Button @click="creatTag">新增标签</Button>
+      <Button @click="creatTag(value)">新增标签</Button>
     </div>
     <ul class="current">
       <li
           v-for="tag in tagList"
           :key="tag.name"
           @click="toggle(tag.name)"
-          :class="{selected: selectedTags.indexOf(tag.name)>=0}"
+          :class="{
+            income:value === '+' && selectedTags.indexOf(tag.name)>=0,
+            output:value ==='-' && selectedTags.indexOf(tag.name)>=0
+          }"
       >
         {{ tag.name }}
       </li>
@@ -17,8 +20,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import {Component} from 'vue-property-decorator';
+import {Component, Prop} from 'vue-property-decorator';
 import {mixins} from 'vue-class-component';
 import TagHelper from '@/mixins/TagHelper';
 
@@ -26,8 +28,10 @@ import TagHelper from '@/mixins/TagHelper';
 @Component
 export default class Tags extends mixins(TagHelper) {
   // tagList = store.fetchTags();
+  @Prop(String) readonly value!: string;
+
   get tagList(){
-    return this.$store.state.tagList
+    return this.$store.state.tagList.filter((t: Tag)=>t.type === this.value)
   }
   selectedTags: string[] = [];
   created(){
@@ -35,7 +39,6 @@ export default class Tags extends mixins(TagHelper) {
   }
   toggle(tag: string) {
     const index = this.selectedTags.indexOf(tag);
-    console.log(tag)
     if (index >= 0) {
       this.selectedTags.splice(index, 1);
     } else {
@@ -67,9 +70,12 @@ export default class Tags extends mixins(TagHelper) {
       margin-right: 12px;
       margin-top: 4px;
       border-radius: (24px/2);
-
-      &.selected {
-        background: darken($bg, 50%);
+      &.income{
+        background: $color-income;
+        color: white;
+      }
+      &.output{
+        background: $color-output;
         color: white;
       }
     }

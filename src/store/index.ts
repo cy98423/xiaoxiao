@@ -33,10 +33,14 @@ const store = new Vuex.Store({
       store.commit("saveRecords");
     },
     initTags(state) {
-      store.commit("createTag", "衣服");
-      store.commit("createTag", "食物");
-      store.commit("createTag", "住宿");
-      store.commit("createTag", "出行");
+      store.commit("createTag", { name: "衣服", type: "-" });
+      store.commit("createTag", { name: "食物", type: "-" });
+      store.commit("createTag", { name: "住宿", type: "-" });
+      store.commit("createTag", { name: "出行", type: "-" });
+      store.commit("createTag", { name: "工资", type: "+" });
+      store.commit("createTag", { name: "红包", type: "+" });
+      store.commit("createTag", { name: "意外之财", type: "+" });
+      store.commit("createTag", { name: "股票", type: "+" });
       state.firstInit = 1;
     },
     fetchTags(state) {
@@ -49,14 +53,14 @@ const store = new Vuex.Store({
         state.firstInit = 1;
       }
     },
-    createTag(state, name: string) {
+    createTag(state, payload: { name: string; type: string }) {
       const id = createId().toString();
       const names = state.tagList.map((item) => item.name);
-      if (names.indexOf(name) >= 0) {
+      if (names.indexOf(payload.name) >= 0) {
         window.alert("标签名重复了");
         return;
       }
-      state.tagList.push({ id: id, name: name });
+      state.tagList.push({ id: id, name: payload.name, type: payload.type });
       store.commit("saveTags");
       if (state.firstInit === 0) {
         return;
