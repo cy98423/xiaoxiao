@@ -13,7 +13,9 @@
             output:value ==='-' && selectedTags.indexOf(tag.name)>=0
           }"
       >
-        {{ tag.name }}
+       <div class="icon-wrapper">
+         {{ tag.name }}
+       </div>
       </li>
     </ul>
   </div>
@@ -64,12 +66,12 @@ export default class Tags extends mixins(TagHelper) {
     > li {
       $bg: #d9d9d9;
       background-color: $bg;
-      height: 24px;
-      line-height: 24px;
+      height: 32px;
+      line-height: 32px;
       padding: 0 16px;
       margin-right: 12px;
       margin-top: 4px;
-      border-radius: (24px/2);
+      border-radius: (32px/2);
       &.income{
         background: $color-income;
         color: white;

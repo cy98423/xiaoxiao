@@ -9,11 +9,13 @@
             :value.sync="record.notes"
         ></FormItem>
       </div>
-      <Tags1 @update:value="record.tags = $event" :value="record.type" v-if="record.type==='+'"/>
-      <Tags2 @update:value="record.tags = $event" :value="record.type" v-if="record.type==='-'" />
+      <TagsIncome @update:value="record.tags = $event" :value="record.type" v-if="record.type==='+'" ref="TagsIncome"/>
+      <TagsOutput @update:value="record.tags = $event" :value="record.type" v-if="record.type==='-'" ref="TagsOutput"/>
       <Tabs
           :data-source="recordTypeList"
           :value.sync="record.type"
+          ref="TabsTagList"
+          @click.native="changeTabs"
       />
     </layout>
 
@@ -24,19 +26,21 @@ import Vue from 'vue';
 import {Component} from 'vue-property-decorator';
 import NumberPad from '@/components/Money/NumberPad.vue';
 import FormItem from '@/components/Money/FormItem.vue';
-import Tags1 from '@/components/Money/Tags.vue';
-import Tags2 from '@/components/Money/Tags.vue';
+import TagsIncome from '@/components/Money/Tags.vue';
+import TagsOutput from '@/components/Money/Tags.vue';
 import store from '@/store/index.ts';
 import Tabs from '@/components/Tabs.vue';
 import recordTypeList from '@/constants/recordTypeList';
 import {DatePicker} from 'element-ui';
 
 @Component({
-  components: {Tabs, Tags1,Tags2, FormItem , NumberPad,DatePicker},
+  components: {Tabs, TagsIncome,TagsOutput, FormItem , NumberPad,DatePicker},
 })
 export default class Money extends Vue {
   public $refs!: {
     NumberPad: NumberPad;
+    TagsIncome: TagsIncome;
+    TagsOutput: TagsOutput;
   }
 
   get recordList(){
@@ -45,12 +49,14 @@ export default class Money extends Vue {
 
   recordTypeList = recordTypeList;
 
+
   record: RecordItem = {
     tags: [],
     notes: '',
     type: '+',
     amount: 0,
   };
+  oldType = this.record.type;
   created(){
     this.$store.commit('fetchRecords')
   }
@@ -72,6 +78,20 @@ export default class Money extends Vue {
     }
   }
 
+  changeTabs(){
+    if (this.oldType === this.record.type){
+      return;
+    }else {
+      if (this.record.type === '+'){
+        this.$refs.TagsIncome.selectedTags = []
+        this.record.tags = []
+      }else{
+        this.$refs.TagsOutput.selectedTags = [];
+        this.record.tags = []
+      }
+      this.oldType = this.record.type;
+    }
+  }
 }
 
 </script>
