@@ -1,7 +1,7 @@
 <template>
   <div class="tags">
     <div class="new">
-      <button @click="creatTag">新增标签</button>
+      <Button @click="creatTag">新增标签</Button>
     </div>
     <ul class="current">
       <li

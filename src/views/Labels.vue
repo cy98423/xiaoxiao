@@ -18,12 +18,12 @@
 
 import Vue from 'vue';
 import {Component} from 'vue-property-decorator';
-import Button from '@/components/Button.vue';
+import MyButton from '@/components/MyButton.vue';
 import tagHelper from '@/mixins/TagHelper'
 import {mixins} from 'vue-class-component';
 
 @Component({
-  components: {Button},
+  components: {Button: MyButton},
   mixins:[tagHelper],
 })
 export default class Labels extends mixins(tagHelper) {

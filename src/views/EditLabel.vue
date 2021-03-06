@@ -22,11 +22,11 @@
 import Vue from 'vue';
 import {Component} from 'vue-property-decorator';
 import FormItem from '@/components/Money/FormItem.vue';
-import Button from '@/components/Button.vue';
+import MyButton from '@/components/MyButton.vue';
 
 
 @Component({
-  components: {Button, FormItem},
+  components: {Button: MyButton, FormItem},
 })
 export default class EditLabel extends Vue{
   get currentTag(){

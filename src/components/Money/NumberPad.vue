@@ -2,20 +2,21 @@
   <div class="numberPad">
     <div class="output">{{ output }}</div>
     <div class="buttons">
-      <button @click="inputContent">1</button>
-      <button @click="inputContent">2</button>
-      <button @click="inputContent">3</button>
-      <button @click="remove">删除</button>
-      <button @click="inputContent">4</button>
-      <button @click="inputContent">5</button>
-      <button @click="inputContent">6</button>
-      <button @click="clear">清空</button>
-      <button @click="inputContent">7</button>
-      <button @click="inputContent">8</button>
-      <button @click="inputContent">9</button>
-      <button @click="ok" class="ok">OK</button>
-      <button class="zero" @click="inputContent">0</button>
-      <button @click="inputContent">.</button>
+      <Button @click="inputContent">1</Button>
+      <Button @click="inputContent">2</Button>
+      <Button @click="inputContent">3</Button>
+      <Button @click="remove">删除</Button>
+      <Button @click="inputContent">4</Button>
+      <Button @click="inputContent">5</Button>
+      <Button @click="inputContent">6</Button>
+      <Button @click="clear">清空</Button>
+      <Button @click="inputContent">7</Button>
+      <Button @click="inputContent">8</Button>
+      <Button @click="inputContent">9</Button>
+      <Button @click="inputContent">9</Button>
+      <Button @click="ok" class="ok">OK</Button>
+      <Button class="zero" @click="inputContent">0</Button>
+      <Button @click="inputContent">.</Button>
     </div>
   </div>
 </template>
@@ -86,17 +87,24 @@ export default class NumberPad extends Vue {
 
   .buttons {
     @extend %clearFix;
-
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: start;
+    max-height: 192px;
     > button {
       width: 25%;
-      height: 64px;
-      float: left;
+      height: 48px;
       background: transparent;
       border: none;
-
+      margin:0;
+      padding: 0;
+      border-radius: 0;
       &.ok {
-        height: 64*2px;
-        float: right;
+        order: 4;
+        height: 48*2px;
+        position: relative;
+        top: -48px;
       }
 
       &.zero {
@@ -128,9 +136,12 @@ export default class NumberPad extends Vue {
       &:nth-child(14) {
         background: darken($bg, 4*5%);
       }
-
-      &:nth-child(12) {
+      &:nth-child(15) {
         background: darken($bg, 4*6%);
+      }
+
+      &:nth-child(13) {
+        background: darken($bg, 5*6%);
       }
     }
   }

@@ -2,10 +2,7 @@
 
     <layout class-prefix="layout">
       <NumberPad :value.sync="record.amount" @submit="saveRecord"></NumberPad>
-      <Tabs
-          :data-source="recordTypeList"
-          :value.sync="record.type"
-      />
+
       <div class="Money-notes">
         <FormItem
             field-name="备注"
@@ -14,6 +11,10 @@
         ></FormItem>
       </div>
       <Tags @update:value="record.tags = $event"/>
+      <Tabs
+          :data-source="recordTypeList"
+          :value.sync="record.type"
+      />
     </layout>
 
 </template>
@@ -27,9 +28,10 @@ import Tags from '@/components/Money/Tags.vue';
 import store from '@/store/index.ts';
 import Tabs from '@/components/Tabs.vue';
 import recordTypeList from '@/constants/recordTypeList';
+import {DatePicker} from 'element-ui';
 
 @Component({
-  components: {Tabs, Tags, FormItem , NumberPad},
+  components: {Tabs, Tags, FormItem , NumberPad,DatePicker},
 })
 export default class Money extends Vue {
   get recordList(){
