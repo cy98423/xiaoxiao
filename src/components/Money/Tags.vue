@@ -14,7 +14,8 @@
           }"
       >
        <div class="icon-wrapper">
-         {{ tag.name }}
+         <Icon name="#食物"/>
+         <span>{{ tag.name }}</span>
        </div>
       </li>
     </ul>
@@ -63,10 +64,12 @@ export default class Tags extends mixins(TagHelper) {
   > .current {
     display: flex;
     flex-wrap: wrap;
+    max-height: 300px;
+    overflow: auto;
     > li {
       $bg: #d9d9d9;
       background-color: $bg;
-      height: 32px;
+      min-height: 32px;
       line-height: 32px;
       padding: 0 16px;
       margin-right: 12px;
@@ -93,6 +96,16 @@ export default class Tags extends mixins(TagHelper) {
       border-bottom: 1px solid;
       padding: 0 4px;
     }
+  }
+}
+.icon-wrapper{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  > .icon{
+    min-height: 32px;
+    min-width: 32px;
   }
 }
 </style>

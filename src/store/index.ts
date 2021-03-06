@@ -54,6 +54,7 @@ const store = new Vuex.Store({
       }
     },
     createTag(state, payload: { name: string; type: string }) {
+      console.log(payload.name);
       const id = createId().toString();
       const names = state.tagList.map((item) => item.name);
       if (names.indexOf(payload.name) >= 0) {
