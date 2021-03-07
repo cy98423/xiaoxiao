@@ -15,6 +15,8 @@ import {
   Pagination,
   Switch,
   Message,
+  Input,
+  MessageBox,
 } from "element-ui";
 Vue.config.productionTip = false;
 
@@ -26,8 +28,13 @@ Vue.component("Carousel", Carousel);
 Vue.component("CarouselItem", CarouselItem);
 Vue.component("Pagination", Pagination);
 Vue.component("ElSwitch", Switch);
+Vue.component("ElInput", Input);
 
 Vue.prototype.$message = Message;
+Vue.prototype.$msgbox = MessageBox;
+Vue.prototype.$alert = MessageBox.alert;
+Vue.prototype.$confirm = MessageBox.confirm;
+Vue.prototype.$prompt = MessageBox.prompt;
 
 new Vue({
   router,

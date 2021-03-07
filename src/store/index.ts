@@ -2,7 +2,6 @@ import Vue from "vue";
 import Vuex from "vuex";
 import clone from "@/lib/clone";
 import createId from "@/lib/createId";
-import router from "@/router";
 
 Vue.use(Vuex);
 
@@ -58,9 +57,7 @@ const store = new Vuex.Store({
     ) {
       const id = createId().toString();
       let icon = "#钱包";
-      if (!payload.icon) {
-        return;
-      } else {
+      if (payload.icon) {
         icon = payload.icon;
       }
       state.tagList.push({
@@ -77,6 +74,7 @@ const store = new Vuex.Store({
           payload._this.$message({
             message: "添加标签成功",
             type: "success",
+            center: true,
           });
         }
         //window.alert("添加成功");
@@ -91,34 +89,58 @@ const store = new Vuex.Store({
     setCurrentTag(state, id: string) {
       state.currentTag = state.tagList.filter((t) => t.id === id)[0];
     },
-    updateTag(state, payload: { id: string; name: string }) {
-      const { id, name } = payload;
+    updateTag(
+      state,
+      payload: { id: string; name: string; type: string; _this: Vue }
+    ) {
+      const { id, name, type } = payload;
+      const newTagList = state.tagList.filter((t) => t.type === type); //排除另一种type
       const idList = state.tagList.map((item) => item.id);
       if (idList.indexOf(id) >= 0) {
-        const names = state.tagList.map((item) => item.name);
+        const newNamesList = newTagList.filter((t) => t.id !== id); //拍排除自己
+        const names = newNamesList.map((item) => item.name);
         if (names.indexOf(name) >= 0) {
-          return window.alert("标签名重复了");
+          if (payload._this) {
+            payload._this.$message.error("当前分类已有相同标的签名,请换个名字");
+            return;
+          }
         } else {
           const tag = state.tagList.filter((item) => item.id === id)[0];
           tag.name = name;
           store.commit("saveTags");
+          if (payload._this) {
+            payload._this.$message({
+              message: "修改标签成功",
+              type: "success",
+              duration: 1000,
+              center: true,
+            });
+          }
         }
       }
     },
-    removeTag(state, id: string) {
+    removeTag(state, payload: { id: string; _this: Vue }) {
       let index = -1;
       for (let i = 0; i < state.tagList.length; i++) {
-        if (state.tagList[i].id === id) {
+        if (state.tagList[i].id === payload.id) {
           index = i;
           break;
         }
       }
       if (index >= 0) {
         state.tagList.splice(index, 1);
+        payload._this.$message({
+          type: "success",
+          message: "删除成功!",
+          center: true,
+        });
         store.commit("saveTags");
-        router.back();
       } else {
-        window.alert("删除失败");
+        payload._this.$message({
+          type: "error",
+          message: "删除错误!",
+          center: true,
+        });
       }
     },
   },

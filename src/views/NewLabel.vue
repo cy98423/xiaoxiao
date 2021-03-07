@@ -19,7 +19,7 @@
     </div>
     <ElSwitch
         style="display: block"
-        v-model="typeSwitch"
+        v-model="newLabelOption.type"
         active-color="#13ce66"
         inactive-color="#ff4949"
         active-text="收入"
@@ -28,7 +28,6 @@
         inactive-value="-"
         class="type-switch"
         :width='switchWidth'
-        @change="typeChange"
     >
     </ElSwitch>
     <div class="button-wrapper">
@@ -40,7 +39,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import {Component, Watch} from 'vue-property-decorator';
+import {Component} from 'vue-property-decorator';
 import FormItem from '@/components/Money/FormItem.vue';
 import {Button} from 'element-ui';
 
@@ -52,6 +51,10 @@ type newLabelOption = {
 })
 export default class NewLabel extends Vue {
 
+  get switch(){
+    return true
+  }
+  typeSwitch = this.switch;
   newIconList = [
     {name: '#公交车'},
     {name: '#厨房电器'},
@@ -94,7 +97,7 @@ export default class NewLabel extends Vue {
 
   ];
   selectedIcon: string[] = [];
-  typeSwitch = false;
+
   switchWidth = 100;
   newLabelOption = {
     name: '',
@@ -112,9 +115,6 @@ export default class NewLabel extends Vue {
       this.newLabelOption.icon = item;
     }
   }
-  typeChange(state: string){
-    this.newLabelOption.type = state;
-  }
   goBack(){
     this.$router.back();
   }
@@ -122,7 +122,8 @@ export default class NewLabel extends Vue {
     if (!this.newLabelOption.name) {
       this.$message({
         message: '标签名不能为空',
-        type: 'warning'
+        type: 'warning',
+        center:true
       });
       return
     } else {
@@ -136,7 +137,11 @@ export default class NewLabel extends Vue {
         }
         if (names.indexOf(name) >= 0 && this.newLabelOption.type === types) {
           //return window.alert("当前分类已有相同标的签名,请换个名字");
-          this.$message.error('当前分类已有相同标的签名,请换个名字');
+          this.$message({
+            type: "error",
+            message: '当前分类已有相同标的签名,请换个名字',
+            center: true,
+          });
           return
         }else{
           this.$store.commit("createTag", {
@@ -148,7 +153,11 @@ export default class NewLabel extends Vue {
         }
         this.$router.back();
       }else{
-        this.$message.error('请至少选择一个标签');
+        this.$message({
+          message: "请至少选择一个标签",
+          type: "warning",
+          center:true
+        });
         return
       }
     }
@@ -211,7 +220,6 @@ export default class NewLabel extends Vue {
           background: $color-highlight;
       }
     }
-
   }
 }
 @media (min-height: 568px) {
