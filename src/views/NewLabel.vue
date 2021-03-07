@@ -67,12 +67,10 @@ export default class NewLabel extends Vue {
   selectedIcon: string[]=[]
 
   toggle(item: string){
-    console.log(item);
     const index = this.selectedIcon.indexOf(item);
     if (index) {
       this.selectedIcon.splice(index, 1);
       this.selectedIcon.push(item);
-      console.log(this.selectedIcon);
     }
   }
 }
@@ -98,6 +96,7 @@ export default class NewLabel extends Vue {
     padding-top: 20px;
     > li{
       margin: 10px;
+      cursor: pointer;
       > .icon-wrapper{
         display: flex;
         flex-direction: column;
@@ -111,8 +110,8 @@ export default class NewLabel extends Vue {
           min-width: 32px;
         }
         &.selected{
-          color:$color-highlight;
-          background: rgba(0,0,0,0.15);
+          color:white;
+          background: $color-highlight;
       }
     }
 

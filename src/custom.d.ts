@@ -18,6 +18,7 @@ type Tag = {
   id: string;
   name: string;
   type: string;
+  icon: string;
 };
 
 type TagListModel = {

@@ -33,14 +33,13 @@ const store = new Vuex.Store({
       store.commit("saveRecords");
     },
     initTags(state) {
-      store.commit("createTag", { name: "衣服", type: "-" });
-      store.commit("createTag", { name: "食物", type: "-" });
-      store.commit("createTag", { name: "住宿", type: "-" });
-      store.commit("createTag", { name: "出行", type: "-" });
-      store.commit("createTag", { name: "工资", type: "+" });
-      store.commit("createTag", { name: "红包", type: "+" });
-      store.commit("createTag", { name: "意外之财", type: "+" });
-      store.commit("createTag", { name: "股票", type: "+" });
+      store.commit("createTag", { name: "衣服", type: "-", icon: "#衣服" });
+      store.commit("createTag", { name: "食物", type: "-", icon: "#食物" });
+      store.commit("createTag", { name: "住宿", type: "-", icon: "#房子" });
+      store.commit("createTag", { name: "出行", type: "-", icon: "#汽车" });
+      store.commit("createTag", { name: "工资", type: "+", icon: "#工资" });
+      store.commit("createTag", { name: "红包", type: "+", icon: "#红包" });
+      store.commit("createTag", { name: "股票", type: "+", icon: "#股票" });
       state.firstInit = 1;
     },
     fetchTags(state) {
@@ -53,15 +52,26 @@ const store = new Vuex.Store({
         state.firstInit = 1;
       }
     },
-    createTag(state, payload: { name: string; type: string }) {
-      console.log(payload.name);
+    createTag(state, payload: { name: string; type: string; icon: string }) {
       const id = createId().toString();
+      let icon = "#钱包";
+      if (!payload.icon) {
+        return;
+      } else {
+        icon = payload.icon;
+      }
+
       const names = state.tagList.map((item) => item.name);
       if (names.indexOf(payload.name) >= 0) {
         window.alert("标签名重复了");
         return;
       }
-      state.tagList.push({ id: id, name: payload.name, type: payload.type });
+      state.tagList.push({
+        id: id,
+        name: payload.name,
+        type: payload.type,
+        icon: icon,
+      });
       store.commit("saveTags");
       if (state.firstInit === 0) {
         return;
