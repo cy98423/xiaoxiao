@@ -17,6 +17,7 @@
           ref="TabsTagList"
           @click.native="changeTabs"
       />
+
     </layout>
 
 </template>
@@ -42,7 +43,6 @@ export default class Money extends Vue {
     TagsIncome: TagsIncome;
     TagsOutput: TagsOutput;
   }
-
   get recordList(){
     return store.state.recordList
   }

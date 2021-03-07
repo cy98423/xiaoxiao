@@ -54,6 +54,7 @@ export default class Tags extends mixins(TagHelper) {
 
 <style lang="scss" scoped>
 @import "~@/assets/style/helper.scss";
+
 .tags {
   background-color: white;
   font-size: 14px;
@@ -94,7 +95,7 @@ export default class Tags extends mixins(TagHelper) {
       border: none;
       color: #999;
       border-bottom: 1px solid;
-      padding: 0 4px;
+      padding: 5px 10px 0 10px;
     }
   }
 }
@@ -106,6 +107,29 @@ export default class Tags extends mixins(TagHelper) {
   > .icon{
     min-height: 32px;
     min-width: 32px;
+  }
+}
+
+@media (min-height: 568px) {
+  .tags{
+    > .current{
+      max-height: 70px;
+    }
+  }
+}
+@media (min-height: 667px) {
+  .tags{
+    > .current{
+      max-height: 136px;
+    }
+  }
+}
+
+@media (min-height: 736px) {
+  .tags{
+    > .current{
+      max-height: 272px;
+    }
   }
 }
 </style>

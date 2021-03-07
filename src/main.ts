@@ -7,13 +7,22 @@ import Nav from "@/components/Nav.vue";
 import Layout from "@/components/Layout.vue";
 import Icon from "@/components/Icon.vue";
 import "element-ui/lib/theme-chalk/index.css";
-import { Button, DatePicker } from "element-ui";
+import {
+  Button,
+  DatePicker,
+  Carousel,
+  CarouselItem,
+  Pagination,
+} from "element-ui";
 Vue.config.productionTip = false;
 
 Vue.component("Nav", Nav);
 Vue.component("Layout", Layout);
 Vue.component("Icon", Icon);
 Vue.component("Button", Button);
+Vue.component("Carousel", Carousel);
+Vue.component("CarouselItem", CarouselItem);
+Vue.component("Pagination", Pagination);
 
 new Vue({
   router,

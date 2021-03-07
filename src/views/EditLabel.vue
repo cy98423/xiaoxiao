@@ -13,7 +13,7 @@
           placeholder="请输入标签名"/>
     </div>
     <div class="button-wrapper">
-      <Button @click.native="remove">删除标签</Button>
+      <MyButton @click.native="remove">删除标签</MyButton>
     </div>
   </Layout>
 </template>
@@ -26,7 +26,7 @@ import MyButton from '@/components/MyButton.vue';
 
 
 @Component({
-  components: {Button: MyButton, FormItem},
+  components: {MyButton, FormItem},
 })
 export default class EditLabel extends Vue{
   get currentTag(){

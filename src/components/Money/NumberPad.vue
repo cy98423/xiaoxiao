@@ -14,7 +14,7 @@
       <Button @click="inputContent">8</Button>
       <Button @click="inputContent">9</Button>
       <Button @click="inputContent">9</Button>
-      <Button @click="ok" class="ok">OK</Button>
+      <Button @click="ok" class="ok">记录</Button>
       <Button class="zero" @click="inputContent">0</Button>
       <Button @click="inputContent">.</Button>
     </div>
@@ -139,9 +139,9 @@ export default class NumberPad extends Vue {
       &:nth-child(15) {
         background: darken($bg, 4*6%);
       }
-
-      &:nth-child(13) {
-        background: darken($bg, 5*6%);
+      &:nth-child(13){
+        background: $color-highlight;
+        color: white;
       }
     }
   }
