@@ -1,12 +1,14 @@
 <template>
   <div class="tags" >
     <div class="new">
-      <Button @click="creatTag(value)">新增标签</Button>
+      <router-link to="/labels/newLabel">
+       <Button>新增标签</Button>
+      </router-link>
     </div>
     <ul class="current">
       <li
           v-for="tag in tagList"
-          :key="tag.name"
+          :key="tag.id"
           @click="toggle(tag.name)"
           :class="{
             income:value === '+' && selectedTags.indexOf(tag.name)>=0,

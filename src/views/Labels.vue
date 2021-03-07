@@ -8,7 +8,9 @@
   </div>
   <div>
     <div class="createTag-wrapper">
-      <Button class="createTag" @click.native="creatTag">新建标签</Button>
+      <router-link to="/labels/newLabel">
+        <Button class="createTag">新建标签</Button>
+      </router-link>
     </div>
   </div>
 </layout>

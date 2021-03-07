@@ -7,20 +7,49 @@
             selected:selectedIcon.indexOf(item.name)>=0,
           }">
           <Icon :name="item.name"/>
-
         </div>
       </li>
     </ul>
-
+    <div class="Money-notes">
+      <FormItem
+          field-name="名称"
+          placeholder="取个名字吧~(只取前四位噢)"
+          :value.sync="newLabelOption.name"
+      ></FormItem>
+    </div>
+    <ElSwitch
+        style="display: block"
+        v-model="typeSwitch"
+        active-color="#13ce66"
+        inactive-color="#ff4949"
+        active-text="收入"
+        active-value="+"
+        inactive-text="支出"
+        inactive-value="-"
+        class="type-switch"
+        :width='switchWidth'
+        @change="typeChange"
+    >
+    </ElSwitch>
+    <div class="button-wrapper">
+      <Button type="info" plain @click="goBack">取消</Button>
+      <Button type="primary" plain @click="ok">确认</Button>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import {Component} from 'vue-property-decorator';
+import {Component, Watch} from 'vue-property-decorator';
+import FormItem from '@/components/Money/FormItem.vue';
+import {Button} from 'element-ui';
 
-
-@Component
+type newLabelOption = {
+  name: string; type: string; icon: string;
+}
+@Component({
+  components: {FormItem,Button}
+})
 export default class NewLabel extends Vue {
 
   newIconList = [
@@ -64,13 +93,64 @@ export default class NewLabel extends Vue {
 
 
   ];
-  selectedIcon: string[]=[]
-
-  toggle(item: string){
+  selectedIcon: string[] = [];
+  typeSwitch = false;
+  switchWidth = 100;
+  newLabelOption = {
+    name: '',
+    type: '-',
+    icon: ''
+  };
+  created(){
+    this.$store.commit('fetchTags')
+  }
+  toggle(item: string) {
     const index = this.selectedIcon.indexOf(item);
     if (index) {
       this.selectedIcon.splice(index, 1);
       this.selectedIcon.push(item);
+      this.newLabelOption.icon = item;
+    }
+  }
+  typeChange(state: string){
+    this.newLabelOption.type = state;
+  }
+  goBack(){
+    this.$router.back();
+  }
+  ok(){
+    if (!this.newLabelOption.name) {
+      this.$message({
+        message: '标签名不能为空',
+        type: 'warning'
+      });
+      return
+    } else {
+      const name = this.newLabelOption.name.slice(0, 4).toString();
+      if(this.selectedIcon.length > 0 && this.newLabelOption.icon){
+        const names = this.$store.state.tagList.map((item: Tag) => item.name);
+        const index = names.indexOf(name);
+        let types
+        if (index >= 0){
+          types = this.$store.state.tagList[index].type;
+        }
+        if (names.indexOf(name) >= 0 && this.newLabelOption.type === types) {
+          //return window.alert("当前分类已有相同标的签名,请换个名字");
+          this.$message.error('当前分类已有相同标的签名,请换个名字');
+          return
+        }else{
+          this.$store.commit("createTag", {
+            name,
+            type: this.newLabelOption.type,
+            icon: this.newLabelOption.icon,
+            _this:this}
+            );
+        }
+        this.$router.back();
+      }else{
+        this.$message.error('请至少选择一个标签');
+        return
+      }
     }
   }
 }
@@ -78,16 +158,33 @@ export default class NewLabel extends Vue {
 
 <style lang="scss" scoped>
 @import "~@/assets/style/helper.scss";
-  .title{
-    font-size: 24px;
-  }
-  .ul-wrapper{
-    min-height: 100vh;
-    text-align: center;
-    padding-top: 20px;
-  }
-  .li-wrapper{
-    background: white;
+
+.button-wrapper{
+  text-align: center;
+  padding: 16px;
+  margin-top: 44-16px;
+}
+
+.type-switch {
+  padding-top: 10px;
+}
+
+.Money-notes {
+  @extend %outerShadow
+}
+
+.title {
+  font-size: 24px;
+}
+
+.ul-wrapper {
+  min-height: 100vh;
+  text-align: center;
+  padding-top: 20px;
+}
+
+.li-wrapper {
+  background: white;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -115,6 +212,25 @@ export default class NewLabel extends Vue {
       }
     }
 
+  }
+}
+@media (min-height: 568px) {
+  .li-wrapper{
+      max-height: 300px;
+      overflow: auto;
+    }
+}
+@media (min-height: 667px) {
+  .li-wrapper{
+    max-height: 400px;
+    overflow: auto;
+  }
+}
+
+@media (min-height: 736px) {
+  .li-wrapper{
+    max-height: 500px;
+    overflow: auto;
   }
 }
 

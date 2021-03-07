@@ -52,19 +52,16 @@ const store = new Vuex.Store({
         state.firstInit = 1;
       }
     },
-    createTag(state, payload: { name: string; type: string; icon: string }) {
+    createTag(
+      state,
+      payload: { name: string; type: string; icon: string; _this: Vue }
+    ) {
       const id = createId().toString();
       let icon = "#钱包";
       if (!payload.icon) {
         return;
       } else {
         icon = payload.icon;
-      }
-
-      const names = state.tagList.map((item) => item.name);
-      if (names.indexOf(payload.name) >= 0) {
-        window.alert("标签名重复了");
-        return;
       }
       state.tagList.push({
         id: id,
@@ -76,7 +73,13 @@ const store = new Vuex.Store({
       if (state.firstInit === 0) {
         return;
       } else {
-        window.alert("添加成功");
+        if (payload._this) {
+          payload._this.$message({
+            message: "添加标签成功",
+            type: "success",
+          });
+        }
+        //window.alert("添加成功");
       }
     },
     saveTags(state) {
@@ -94,7 +97,7 @@ const store = new Vuex.Store({
       if (idList.indexOf(id) >= 0) {
         const names = state.tagList.map((item) => item.name);
         if (names.indexOf(name) >= 0) {
-          window.alert("标签名重复了");
+          return window.alert("标签名重复了");
         } else {
           const tag = state.tagList.filter((item) => item.id === id)[0];
           tag.name = name;

@@ -14,6 +14,7 @@
     </div>
     <div class="button-wrapper">
       <MyButton @click.native="remove">删除标签</MyButton>
+
     </div>
   </Layout>
 </template>

@@ -13,6 +13,8 @@ import {
   Carousel,
   CarouselItem,
   Pagination,
+  Switch,
+  Message,
 } from "element-ui";
 Vue.config.productionTip = false;
 
@@ -23,6 +25,9 @@ Vue.component("Button", Button);
 Vue.component("Carousel", Carousel);
 Vue.component("CarouselItem", CarouselItem);
 Vue.component("Pagination", Pagination);
+Vue.component("ElSwitch", Switch);
+
+Vue.prototype.$message = Message;
 
 new Vue({
   router,
