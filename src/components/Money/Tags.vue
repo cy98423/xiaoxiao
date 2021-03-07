@@ -125,7 +125,7 @@ export default class Tags extends mixins(TagHelper) {
 @media (min-height: 667px) {
   .tags{
     > .current{
-      max-height: 136px;
+      max-height: 150px;
     }
   }
 }
