@@ -154,7 +154,7 @@ export default class NewLabel extends Vue {
         this.$router.back();
       }else{
         this.$message({
-          message: "请至少选择一个标签",
+          message: "请选择一个标签",
           type: "warning",
           center:true
         });
