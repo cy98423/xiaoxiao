@@ -17,7 +17,7 @@
       <div v-if="this.type !== 'all'">
         <div v-if="type === '-'" class="info-text">支出统计</div>
         <div v-if="type === '+'" class="info-text">收入统计</div>
-        <MyEcharts :list="echartsList"/>
+        <MyEcharts :list="echartsList" v-if="JSON.stringify(echartsList) !== '{}'"/>
         <ol v-if="groupedList.length>0">
           <li v-for="(group,index) in groupedList" :key="index">
             <h3 class="title">{{ beautify(group.title) }}<span :class="getH3Class(group)">{{ group.type }}{{
@@ -210,7 +210,7 @@ export default class Statistics extends Vue {
   }
 }
 .statistics-content{
-  max-height: 750px;
+  max-height: 680px;
   overflow: auto;
 }
 .noResult {
