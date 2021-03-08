@@ -1,45 +1,45 @@
 <template>
   <layout>
-    <Tabs
-        class-prefix="type"
-        :data-source="recordTypeList"
-        :value.sync="type"
-    />
-    <div class="info">
-      <div v-if="type === 'all'" class="info-text">总计</div>
-      <DatePicker
-          @change="dateChange"
-          v-model="dateList.day"
-          format="yyyy-MM"
-          type="month"
-      ></DatePicker>
-    </div>
-    <div v-if="this.type !== 'all'">
-      <div v-if="type === '-'" class="info-text">支出统计</div>
-      <div v-if="type === '+'" class="info-text">收入统计</div>
-      <ol v-if="groupedList.length>0">
-        <li v-for="(group,index) in groupedList" :key="index">
-          <h3 class="title" >{{ beautify(group.title) }}<span :class="getH3Class(group)">{{group.type}}{{ group.total }}</span></h3>
-          <ol>
-            <li v-for="item in group.items" :key="item.id"
-                class="record"
-            >
-              <Icon :name="'#'+item.tags[0]"></Icon>
-              <span>{{tagString(item.tags)}}</span>
-              <span class="notes">{{item.notes}}</span>
-              <span>{{item.type}}{{ item.amount }}</span>
-            </li>
-          </ol>
-        </li>
-      </ol>
-      <div v-else class="noResult">
-        目前没有相关记录
+    <div class="statistics-content">
+      <Tabs
+          class-prefix="type"
+          :data-source="recordTypeList"
+          :value.sync="type"
+      />
+      <div class="info">
+        <div v-if="type === 'all'" class="info-text">总计</div>
+        <DatePicker
+            v-model="dateList.day"
+            format="yyyy-MM"
+            type="month"
+        ></DatePicker>
+      </div>
+      <div v-if="this.type !== 'all'">
+        <div v-if="type === '-'" class="info-text">支出统计</div>
+        <div v-if="type === '+'" class="info-text">收入统计</div>
+        <MyEcharts :list="echartsList"/>
+        <ol v-if="groupedList.length>0">
+          <li v-for="(group,index) in groupedList" :key="index">
+            <h3 class="title">{{ beautify(group.title) }}<span :class="getH3Class(group)">{{ group.type }}{{
+                group.total
+              }}</span></h3>
+            <ol>
+              <li v-for="item in group.items" :key="item.id"
+                  class="record"
+              >
+                <Icon :name="item.icon"></Icon>
+                <span>{{ tagString(item.tags) }}</span>
+                <span class="notes">{{ item.notes }}</span>
+                <span>{{ item.type }}{{ item.amount }}</span>
+              </li>
+            </ol>
+          </li>
+        </ol>
+        <div v-else class="noResult">
+          目前没有相关记录
+        </div>
       </div>
     </div>
-    <div  v-else>
-      <MyEcharts/>
-    </div>
-
   </layout>
 </template>
 <script lang="ts">
@@ -53,13 +53,13 @@ import MyEcharts from '@/components/MyEcharts.vue';
 
 
 @Component({
-  components: {Tabs,MyEcharts}
+  components: {Tabs, MyEcharts}
 })
 
 export default class Statistics extends Vue {
-  dateList={
+  dateList = {
     day: dayjs()
-  }
+  };
 
   beautify(string: string) {
 
@@ -87,7 +87,7 @@ export default class Statistics extends Vue {
     return (this.$store.state as RootState).recordList;
   }
 
-  get groupedList() {
+  getNewListByDate() {
     const {recordList} = this;//recordList = this.recordList
     if (recordList.length === 0) {
       return [];
@@ -96,17 +96,27 @@ export default class Statistics extends Vue {
         .filter(r => r.type === this.type)
         .sort((a, b) => dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf());
     //只看所选月份的
-    const newList = cloneList.filter((t)=> dayjs(t.createdAt).format('YYYY-MM') === dayjs(this.dateList.day).format('YYYY-MM'))
-    if(newList.length === 0 ){return[]}
-    type Result = { title: string; total?: number; items: RecordItem[] ;type: string}[]
-    const result: Result = [{title: dayjs(newList[0].createdAt).format('YYYY-MM-D'), items: [newList[0]],type:newList[0].type}];
+    return cloneList.filter((t) => dayjs(t.createdAt).format('YYYY-MM') === dayjs(this.dateList.day).format('YYYY-MM'));
+  }
+
+  get groupedList() {
+    const newList = this.getNewListByDate();
+    if (newList.length === 0) {
+      return [];
+    }
+    type Result = { title: string; total?: number; items: RecordItem[]; type: string }[]
+    const result: Result = [{
+      title: dayjs(newList[0].createdAt).format('YYYY-MM-D'),
+      items: [newList[0]],
+      type: newList[0].type
+    }];
     for (let i = 1; i < newList.length; i++) {
       const current = newList[i];
       const last = result[result.length - 1];
       if (dayjs(last.title).isSame(dayjs(current.createdAt), 'day')) {
         last.items.push(current);
       } else {
-        result.push({title: dayjs(current.createdAt).format('YYYY-MM-D'), items: [current],type:current.type});
+        result.push({title: dayjs(current.createdAt).format('YYYY-MM-D'), items: [current], type: current.type});
       }
     }
     result.map(group => {
@@ -115,13 +125,43 @@ export default class Statistics extends Vue {
     return result;
   }
 
-  getH3Class = (group: Result) =>{
-    if (group.type === '+'){
-      return 'income-color'
-    }else if(group.type === '-'){
-      return 'output-color'
+  get echartsList() {
+    const list = this.getNewListByDate();
+    if (list[0]){
+      const name = list[0].tags[0];
+      const amount = list[0].amount;
+      const result: EchartsResult=
+          {
+            [name]:{
+              name:name,
+              value:amount
+            }
+          }
+      for (let i = 1; i < list.length; i++) {
+        const name = list[i].tags[0];
+        const amount = list[i].amount;
+        if (result[name]) {
+          result[name].value += amount
+        } else {
+          result[name] = {
+            name: name,
+            value: amount
+          }
+        }
+      }
+      return result;
     }
+
+    return {}
   }
+
+  getH3Class = (group: Result) => {
+    if (group.type === '+') {
+      return 'income-color';
+    } else if (group.type === '-') {
+      return 'output-color';
+    }
+  };
 
   beforeCreate() {
     this.$store.commit('fetchRecords');
@@ -130,34 +170,55 @@ export default class Statistics extends Vue {
   type = '-';
   statisticsList = [
     {
-      text: "支出",
-      value: "-",
+      text: '支出',
+      value: '-',
     },
     {
-      text: "收入",
-      value: "+",
+      text: '收入',
+      value: '+',
     },
     {
-      text:"总计",
+      text: '总计',
       value: 'all'
     }
-  ]
-  //recordTypeList = recordTypeList;
+  ];
   recordTypeList = this.statisticsList;
-  dateChange(state: Date){
-    //console.log(this.dateList.day);
-  }
 }
 </script>
 
 
 <style lang="scss" scoped>
 @import "~@/assets/style/helper.scss";
-.noResult{
+
+@media (min-height: 568px) {
+  .statistics-content{
+    max-height: 507px;
+    overflow: auto;
+  }
+}
+@media (min-height: 667px) {
+  .statistics-content{
+    max-height: 606px;
+    overflow: auto;
+  }
+}
+
+@media (min-height: 736px) {
+  .statistics-content{
+    max-height: 665px;
+    overflow: auto;
+  }
+}
+.statistics-content{
+  max-height: 750px;
+  overflow: auto;
+}
+.noResult {
   padding: 16px;
   text-align: center;
 }
-.info{
+
+.info {
   padding: 8px 0;
   display: flex;
   flex-wrap: wrap;
@@ -165,19 +226,24 @@ export default class Statistics extends Vue {
   justify-content: center;
   text-align: center;
 }
-.info-text{
+
+.info-text {
   width: 100%;
   text-align: center;
 }
-.income-color{
+
+.income-color {
   color: $color-income;
 }
-.output-color{
+
+.output-color {
   color: $color-output;
 }
-.all-color{
+
+.all-color {
   color: $color-highlight
 }
+
 %item {
   padding: 8px 16px;
   line-height: 24px;
@@ -194,8 +260,9 @@ export default class Statistics extends Vue {
   background: white;
   align-items: center;
   @extend %item;
-  > .icon{
-  margin-right: 10px;
+
+  > .icon {
+    margin-right: 10px;
   }
 }
 
@@ -208,8 +275,10 @@ export default class Statistics extends Vue {
 ::v-deep {
   .type-tabs-item {
     background: #c4c4c4;
+
     &.selected {
       background: white;
+
       &::after {
         display: none;
       }

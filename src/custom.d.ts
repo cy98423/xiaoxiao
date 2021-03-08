@@ -6,8 +6,15 @@ type RootState = {
   currentTag?: Tag;
 };
 
+interface EchartsResult {
+  [key: string]: {
+    name: string;
+    value: number;
+  };
+}
+
 type RecordItem = {
-  tags: Tag[];
+  tags: string[];
   notes: string;
   type: string;
   amount: number;

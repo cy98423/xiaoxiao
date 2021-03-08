@@ -75,8 +75,15 @@ export default class Money extends Vue {
       });
       return
     }
-    console.log(this.record);
-    //this.$store.commit('createRecord',this.record)
+    if(this.record.amount === 0){
+      this.$message({
+        message: "请输入金额",
+        type: "warning",
+        center:true
+      });
+      return;
+    }
+    this.$store.commit('createRecord',this.record)
     if(this.$store.state.createRecordError === null){
       this.$message({
         message: "已保存",

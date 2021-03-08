@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import {Component} from 'vue-property-decorator';
+import {Component, Prop, Watch} from 'vue-property-decorator';
 import * as echarts from "echarts";
 
 
@@ -15,51 +15,67 @@ export default class MyEcharts extends Vue{
   public $refs!: {
     container: HTMLDivElement;//组件名
   }
-  mounted(){
+  myChart!: echarts.ECharts;
+  echartsOption = {
+    tooltip: {
+      trigger: 'item'
+    },
+    legend: {
+      left: 'center',
+    },
+    series: [
+      {
+        name: '花费',
+        type: 'pie',
+        radius: '50%',
+        data: [
+          {value: 0, name: ''},
+        ],
+        emphasis: {
+          itemStyle: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: 'rgba(0, 0, 0, 0.5)'
+          }
+        }
+      }
+    ]
+  }
+
+  @Prop() readonly list!: EchartsResult;
+  @Watch('list')
+  resetEchartsOption(){
+    if(this.list){
+      this.echartsOption.series[0].data = [];
+      for (const item in this.list) {
+        const name = item.toString();
+        this.echartsOption.series[0].data.push({value:this.list[name].value,name:this.list[name].name})
+      }
+    }
+    this.myChart.setOption(this.echartsOption);
+  }
+
+  initEcharts(){
     let width = document.documentElement.offsetWidth;
     if(width>500){
       width = 500;
     }
-    this.$refs.container.style.width = `${width}px`;
+    this.$refs.container.style.width = `${width-20}px`;
     this.$refs.container.style.height = `${width*1.2}px`;
-    const myChart = echarts.init(this.$refs.container);
+    this.myChart = echarts.init(this.$refs.container);
+    if(this.list){
+      this.echartsOption.series[0].data = [];
+      for (const item in this.list) {
+        const name: string = item;
+        this.echartsOption.series[0].data.push({value:this.list[name].value,name:this.list[name].name})
+      }
+    }
 // 绘制图表
-    myChart.setOption({
-      title: {
-        text: '某站点用户访问来源',
-        subtext: '纯属虚构',
-        left: 'center'
-      },
-      tooltip: {
-        trigger: 'item'
-      },
-      legend: {
-        orient: 'vertical',
-        left: 'left',
-      },
-      series: [
-        {
-          name: '访问来源',
-          type: 'pie',
-          radius: '50%',
-          data: [
-            {value: 1048, name: '搜索引擎'},
-            {value: 735, name: '直接访问'},
-            {value: 580, name: '邮件营销'},
-            {value: 484, name: '联盟广告'},
-            {value: 300, name: '视频广告'}
-          ],
-          emphasis: {
-            itemStyle: {
-              shadowBlur: 10,
-              shadowOffsetX: 0,
-              shadowColor: 'rgba(0, 0, 0, 0.5)'
-            }
-          }
-        }
-      ]
-    });
-
+    this.myChart.setOption(this.echartsOption);
+  }
+  mounted(){
+    console.log(this.list);
+    this.initEcharts()
   }
 }
 </script>
