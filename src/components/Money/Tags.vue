@@ -43,12 +43,8 @@ export default class Tags extends mixins(TagHelper) {
     this.$store.commit('fetchTags')
   }
   toggle(tag: string) {
-    const index = this.selectedTags.indexOf(tag);
-    if (index >= 0) {
-      this.selectedTags.splice(index, 1);
-    } else {
-      this.selectedTags.push(tag);
-    }
+    this.selectedTags.splice(0, 1);
+    this.selectedTags.push(tag);
     this.$emit('update:value',this.selectedTags)
   }
 }
