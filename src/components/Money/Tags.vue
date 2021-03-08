@@ -9,7 +9,7 @@
       <li
           v-for="tag in tagList"
           :key="tag.id"
-          @click="toggle(tag.name)"
+          @click="toggle(tag)"
           :class="{
             income:value === '+' && selectedTags.indexOf(tag.name)>=0,
             output:value ==='-' && selectedTags.indexOf(tag.name)>=0
@@ -39,13 +39,21 @@ export default class Tags extends mixins(TagHelper) {
     return this.$store.state.tagList.filter((t: Tag)=>t.type === this.value)
   }
   selectedTags: string[] = [];
+  selectedTagsIcon?: string = '';
   created(){
     this.$store.commit('fetchTags')
   }
-  toggle(tag: string) {
-    this.selectedTags.splice(0, 1);
-    this.selectedTags.push(tag);
+  toggle(tag: Tag) {
+    const index = this.selectedTags.indexOf(tag.name);
+    if (index >= 0) {
+      this.selectedTags.splice(index, 1);
+    } else {
+      this.selectedTags.splice(index, 1);
+      this.selectedTags.push(tag.name);
+    }
+    this.selectedTagsIcon = tag.icon;
     this.$emit('update:value',this.selectedTags)
+    this.$emit('updateIcon',this.selectedTagsIcon)
   }
 }
 </script>

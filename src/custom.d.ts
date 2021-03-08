@@ -12,6 +12,7 @@ type RecordItem = {
   type: string;
   amount: number;
   createdAt?: string;
+  icon?: string;
 };
 type Result = {
   title: string;

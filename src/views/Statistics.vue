@@ -24,6 +24,7 @@
             <li v-for="item in group.items" :key="item.id"
                 class="record"
             >
+              <Icon :name="'#'+item.tags[0]"></Icon>
               <span>{{tagString(item.tags)}}</span>
               <span class="notes">{{item.notes}}</span>
               <span>{{item.type}}{{ item.amount }}</span>
@@ -144,7 +145,7 @@ export default class Statistics extends Vue {
   //recordTypeList = recordTypeList;
   recordTypeList = this.statisticsList;
   dateChange(state: Date){
-    console.log(this.dateList.day);
+    //console.log(this.dateList.day);
   }
 }
 </script>
@@ -191,7 +192,11 @@ export default class Statistics extends Vue {
 
 .record {
   background: white;
-  @extend %item
+  align-items: center;
+  @extend %item;
+  > .icon{
+  margin-right: 10px;
+  }
 }
 
 .notes {

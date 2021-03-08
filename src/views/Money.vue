@@ -9,8 +9,8 @@
             :value.sync="record.notes"
         ></FormItem>
       </div>
-      <TagsIncome @update:value="record.tags = $event" :value="record.type" v-if="record.type==='+'" ref="TagsIncome"/>
-      <TagsOutput @update:value="record.tags = $event" :value="record.type" v-if="record.type==='-'" ref="TagsOutput"/>
+      <TagsIncome @update:value="record.tags = $event" @updateIcon="record.icon = $event" :value="record.type" v-if="record.type==='+'" ref="TagsIncome"/>
+      <TagsOutput @update:value="record.tags = $event" @updateIcon="record.icon = $event" :value="record.type" v-if="record.type==='-'" ref="TagsOutput"/>
       <Tabs
           :data-source="recordTypeList"
           :value.sync="record.type"
@@ -55,6 +55,7 @@ export default class Money extends Vue {
     notes: '',
     type: '-',
     amount: 0,
+    icon:''
   };
   oldType = this.record.type;
   created(){
@@ -67,12 +68,22 @@ export default class Money extends Vue {
 
   saveRecord() {
     if (this.record.tags.length === 0 || !this.record.tags){
-      window.alert('请选择一个标签')
+      this.$message({
+        message: "请选择一个标签",
+        type: "warning",
+        center:true
+      });
       return
     }
-    this.$store.commit('createRecord',this.record)
+    console.log(this.record);
+    //this.$store.commit('createRecord',this.record)
     if(this.$store.state.createRecordError === null){
-      window.alert('已保存');
+      this.$message({
+        message: "已保存",
+        type: "success",
+        duration: 1000,
+        center: true,
+      });
       this.record.notes = '';
       this.$refs.NumberPad.output = '0'
     }
