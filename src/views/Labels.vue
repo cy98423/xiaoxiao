@@ -15,8 +15,8 @@
         <ElSwitch
             style="display: block"
             v-model="tag.type"
-            active-color="#13ce66"
-            inactive-color="#ff4949"
+            active-color="#ff4949"
+            inactive-color="#13ce66"
             active-text="收入"
             active-value="+"
             inactive-text="支出"

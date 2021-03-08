@@ -24,7 +24,13 @@ export default class Tabs extends Vue{
   @Prop(String) classPrefix?: string;
 
   liClass = (item: DataSourceItem)=>{
-    return{selected: item.value === this.value,[this.classPrefix+'-tabs-item']: this.classPrefix}
+    return{
+      selected: item.value === this.value,
+      [this.classPrefix+'-tabs-item']: this.classPrefix,
+      selectedIncome: item.value === this.value && this.value === '+',
+      selectedOutput: item.value === this.value && this.value === '-',
+      selectedAll:item.value === this.value && this.value === 'all'
+    }
   }
   select(item: DataSourceItem){
     this.$emit('update:value',item.value)
@@ -47,15 +53,14 @@ export default class Tabs extends Vue{
     justify-content: center;
     align-items: center;
     position: relative;
-
-    &.selected::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 4px;
-      background: #333333;
+    &.selectedOutput{
+      background: $color-output
+    }
+    &.selectedIncome{
+      background: $color-income;
+    }
+    &.selectedAll{
+      background: $color-highlight;
     }
   }
 }

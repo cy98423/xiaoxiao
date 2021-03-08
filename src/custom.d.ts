@@ -13,6 +13,12 @@ type RecordItem = {
   amount: number;
   createdAt?: string;
 };
+type Result = {
+  title: string;
+  total?: number;
+  items: RecordItem[];
+  type: string;
+};
 
 type Tag = {
   id: string;

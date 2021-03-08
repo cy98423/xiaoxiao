@@ -18,12 +18,15 @@ import {
   Input,
   MessageBox,
 } from "element-ui";
+import echarts from "echarts";
+Vue.prototype.$echarts = echarts;
 Vue.config.productionTip = false;
 
 Vue.component("Nav", Nav);
 Vue.component("Layout", Layout);
 Vue.component("Icon", Icon);
 Vue.component("Button", Button);
+Vue.component("DatePicker", DatePicker);
 Vue.component("Carousel", Carousel);
 Vue.component("CarouselItem", CarouselItem);
 Vue.component("Pagination", Pagination);
