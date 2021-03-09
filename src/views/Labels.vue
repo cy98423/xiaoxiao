@@ -62,13 +62,16 @@ export default class Labels extends mixins(tagHelper) {
     this.$confirm('此操作将永久删除该标签, 是否继续?', '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
-      type: 'warning'
+      type: 'warning',
+      customClass:'confirm-box',
+      center: true
     }).then(() => {
       this.$store.commit('removeTag',{id:tag.id,_this:this})
     }).catch(() => {
       this.$message({
         type: 'info',
         message: '已取消删除',
+        duration:1000,
         center:true
       });
     });

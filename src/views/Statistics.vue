@@ -31,6 +31,7 @@
                 <span>{{ tagString(item.tags) }}</span>
                 <span class="notes">{{ item.notes }}</span>
                 <span>{{ item.type }}{{ item.amount }}</span>
+                <Icon name="#删除" class="icon-delete"></Icon>
               </li>
             </ol>
           </li>
@@ -296,7 +297,7 @@ export default class Statistics extends Vue {
 
 .all-color {
   color: $color-highlight;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 %item {
@@ -319,6 +320,9 @@ export default class Statistics extends Vue {
   > .icon {
     margin-right: 10px;
   }
+}
+.icon-delete{
+  margin-left: 20px;
 }
 
 .notes {

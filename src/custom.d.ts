@@ -20,6 +20,7 @@ type RecordItem = {
   amount: number;
   createdAt?: string;
   icon?: string;
+  id: string;
 };
 type Result = {
   title: string;

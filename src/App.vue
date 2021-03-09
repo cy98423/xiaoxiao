@@ -25,4 +25,7 @@ body {
   max-width: 500px;
   margin: 0 auto;
 }
+.confirm-box{
+  max-width: 300px;
+}
 </style>

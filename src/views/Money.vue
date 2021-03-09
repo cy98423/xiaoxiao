@@ -55,7 +55,8 @@ export default class Money extends Vue {
     notes: '',
     type: '-',
     amount: 0,
-    icon:''
+    icon:'',
+    id:''
   };
   oldType = this.record.type;
   created(){

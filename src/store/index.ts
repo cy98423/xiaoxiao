@@ -2,6 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import clone from "@/lib/clone";
 import createId from "@/lib/createId";
+import createRecordId from "@/lib/createRecordId";
 
 Vue.use(Vuex);
 
@@ -28,6 +29,7 @@ const store = new Vuex.Store({
     createRecord(state, record: RecordItem) {
       const record2 = clone(record);
       record2.createdAt = new Date().toISOString();
+      record2.id = createRecordId().toString();
       state.recordList?.push(record2); //新语法,等价于this.recordList && this.recordList.push(record2)
       store.commit("saveRecords");
     },

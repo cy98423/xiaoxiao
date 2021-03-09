@@ -21,5 +21,5 @@ git commit -m 'deploy'
 
 # 部署到 https://<USERNAME>.github.io/<REPO>
 git push -f git@github.com:cy98423/xiaoxiao-website.git master:gh-pages
-
+git push -f git@gitee.com:Cy-Qy/xiaoxiao-website.git master:master
 cd -
