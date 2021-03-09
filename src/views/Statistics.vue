@@ -12,7 +12,7 @@
             format="yyyy-MM"
             type="month"
         ></DatePicker>
-        <div v-if="type === 'all'" class="info-text" :class="getInfoClass(type)"><span>总计结余：<strong>{{allAmount}}</strong></span></div>
+        <div v-if="type === 'all'" class="info-text" :class="getInfoClass(type)"><span>总计结余：<strong>{{allAmount}}</strong>元</span></div>
       </div>
       <div v-if="this.type !== 'all'">
         <div v-if="type === '-'" class="info-text"><span >共支出<strong :class="getInfoClass(type)">{{totalAmount}}</strong>元</span></div>
@@ -169,11 +169,11 @@ export default class Statistics extends Vue {
   }
   get allAmount(){
     let income = 0;
-    let output=0;
+    let output = 0;
     let sum = 0;
     const {recordList} = this;//recordList = this.recordList
     if (recordList.length === 0) {
-      return [];
+      return 0;//这里不需要return空数组
     }
     const cloneList = clone(recordList)
         .sort((a, b) => dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf());
@@ -186,6 +186,9 @@ export default class Statistics extends Vue {
         output -= newList[i].amount
       }
     }
+    console.log(income)
+    console.log(output)
+    console.log(sum)
     sum = income + output;
     return sum
   }
