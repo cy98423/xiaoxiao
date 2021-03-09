@@ -42,7 +42,6 @@ const store = new Vuex.Store({
         }
       }
       if (index >= 0) {
-        console.log("删除");
         state.recordList.splice(index, 1);
         payload._this.$message({
           type: "success",
@@ -52,7 +51,6 @@ const store = new Vuex.Store({
         });
         store.commit("saveRecords");
       } else {
-        console.log("删除错误");
         payload._this.$message({
           type: "error",
           message: "删除错误!",
