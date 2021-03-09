@@ -60,8 +60,8 @@ export default class MyEcharts extends Vue{
     if(width>500){
       width = 500;
     }
-    this.$refs.container.style.width = `${width-20}px`;
-    this.$refs.container.style.height = `${width*1.2}px`;
+    this.$refs.container.style.width = `${(width-20)*0.618}*.8px`;
+    this.$refs.container.style.height = `${(width-20)*0.618}px`;
     this.myChart = echarts.init(this.$refs.container);
     if(this.list){
       this.echartsOption.series[0].data = [];
@@ -74,7 +74,6 @@ export default class MyEcharts extends Vue{
     this.myChart.setOption(this.echartsOption);
   }
   mounted(){
-    console.log(this.list);
     this.initEcharts()
   }
 }

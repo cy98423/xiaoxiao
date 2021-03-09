@@ -7,16 +7,16 @@
           :value.sync="type"
       />
       <div class="info">
-        <div v-if="type === 'all'" class="info-text">总计</div>
         <DatePicker
             v-model="dateList.day"
             format="yyyy-MM"
             type="month"
         ></DatePicker>
+        <div v-if="type === 'all'" class="info-text" :class="getInfoClass(type)"><span>总计结余：<strong>{{allAmount}}</strong></span></div>
       </div>
       <div v-if="this.type !== 'all'">
-        <div v-if="type === '-'" class="info-text">支出统计</div>
-        <div v-if="type === '+'" class="info-text">收入统计</div>
+        <div v-if="type === '-'" class="info-text"><span >共支出<strong :class="getInfoClass(type)">{{totalAmount}}</strong>元</span></div>
+        <div v-if="type === '+'" class="info-text"><span >共收入<strong :class="getInfoClass(type)">{{totalAmount}}</strong>元</span></div>
         <MyEcharts :list="echartsList" v-if="JSON.stringify(echartsList) !== '{}'"/>
         <ol v-if="groupedList.length>0">
           <li v-for="(group,index) in groupedList" :key="index">
@@ -60,6 +60,7 @@ export default class Statistics extends Vue {
   dateList = {
     day: dayjs()
   };
+
 
   beautify(string: string) {
 
@@ -155,6 +156,40 @@ export default class Statistics extends Vue {
     return {}
   }
 
+  get totalAmount(){
+    const list = this.echartsList;
+    let allAmount = 0;
+    if(list){
+      for (const item in list) {
+        const name = item.toString();
+        allAmount += list[name].value
+      }
+    }
+    return allAmount
+  }
+  get allAmount(){
+    let income = 0;
+    let output=0;
+    let sum = 0;
+    const {recordList} = this;//recordList = this.recordList
+    if (recordList.length === 0) {
+      return [];
+    }
+    const cloneList = clone(recordList)
+        .sort((a, b) => dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf());
+    //只看所选月份的
+    const newList =  cloneList.filter((t) => dayjs(t.createdAt).format('YYYY-MM') === dayjs(this.dateList.day).format('YYYY-MM'));
+    for (let i=0;i<newList.length;i++){
+      if (newList[i].type === "+"){
+        income += newList[i].amount
+      }else{
+        output -= newList[i].amount
+      }
+    }
+    sum = income + output;
+    return sum
+  }
+
   getH3Class = (group: Result) => {
     if (group.type === '+') {
       return 'income-color';
@@ -162,6 +197,16 @@ export default class Statistics extends Vue {
       return 'output-color';
     }
   };
+
+  getInfoClass = (type: string)=>{
+    if (type === '+') {
+      return 'income-color';
+    } else if (type === '-') {
+      return 'output-color';
+    }else if(type === 'all'){
+      return 'all-color';
+    }
+  }
 
   beforeCreate() {
     this.$store.commit('fetchRecords');
@@ -230,6 +275,12 @@ export default class Statistics extends Vue {
 .info-text {
   width: 100%;
   text-align: center;
+  > span{
+    > strong{
+      padding: 0 12px;
+    }
+  }
+
 }
 
 .income-color {
@@ -241,7 +292,8 @@ export default class Statistics extends Vue {
 }
 
 .all-color {
-  color: $color-highlight
+  color: $color-highlight;
+  margin-top: 20px;
 }
 
 %item {
