@@ -33,6 +33,34 @@ const store = new Vuex.Store({
       state.recordList?.push(record2); //新语法,等价于this.recordList && this.recordList.push(record2)
       store.commit("saveRecords");
     },
+    removeRecord(state, payload: { id: string; _this: Vue }) {
+      let index = -1;
+      for (let i = 0; i < state.recordList.length; i++) {
+        if (state.recordList[i].id === payload.id) {
+          index = i;
+          break;
+        }
+      }
+      if (index >= 0) {
+        console.log("删除");
+        state.recordList.splice(index, 1);
+        payload._this.$message({
+          type: "success",
+          message: "删除成功!",
+          center: true,
+          duration: 1000,
+        });
+        store.commit("saveRecords");
+      } else {
+        console.log("删除错误");
+        payload._this.$message({
+          type: "error",
+          message: "删除错误!",
+          center: true,
+          duration: 1000,
+        });
+      }
+    },
     initTags(state) {
       store.commit("createTag", { name: "衣服", type: "-", icon: "#衣服" });
       store.commit("createTag", { name: "食物", type: "-", icon: "#食物" });

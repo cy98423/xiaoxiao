@@ -31,7 +31,7 @@
                 <span>{{ tagString(item.tags) }}</span>
                 <span class="notes">{{ item.notes }}</span>
                 <span>{{ item.type }}{{ item.amount }}</span>
-                <Icon name="#删除" class="icon-delete"></Icon>
+                <Icon name="#删除" class="icon-delete" @click.native="removeRecord(item)"></Icon>
               </li>
             </ol>
           </li>
@@ -192,6 +192,12 @@ export default class Statistics extends Vue {
     console.log(sum)
     sum = income + output;
     return sum
+  }
+
+  removeRecord(item: RecordItem){
+    console.log(item);
+    console.log(item.id);
+    this.$store.commit('removeRecord',{id:item.id.toString(),_this:this})
   }
 
   getH3Class = (group: Result) => {
