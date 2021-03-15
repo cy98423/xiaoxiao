@@ -187,9 +187,6 @@ export default class Statistics extends Vue {
         output -= newList[i].amount
       }
     }
-    console.log(income)
-    console.log(output)
-    console.log(sum)
     sum = income + output;
     return sum
   }

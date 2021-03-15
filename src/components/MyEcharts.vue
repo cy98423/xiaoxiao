@@ -25,7 +25,6 @@ export default class MyEcharts extends Vue{
     },
     series: [
       {
-        name: '花费',
         type: 'pie',
         radius: '50%',
         data: [
